@@ -13,32 +13,46 @@
   <header class="header">
     <h1 class="header__title">🚃 JRE BANK グリーン券 旅プラン</h1>
     <p class="header__subtitle">期限切れ前にサクッと贅沢 — 普通列車グリーン車で行く日帰り・半日旅</p>
-    <div class="station-toggle js-station-toggle"></div>
+    <nav class="nav-tabs js-nav-tabs">
+      <button class="nav-tabs__btn nav-tabs__btn--active" data-page="plans">行き先を探す</button>
+      <button class="nav-tabs__btn" data-page="map">運行マップ・時間</button>
+      <button class="nav-tabs__btn" data-page="rules">利用ルール</button>
+    </nav>
   </header>
 
-  <div class="alert-banner js-alert-banner">
-    <span class="alert-banner__icon">⚠️</span>
-    <span class="js-alert-text"></span>
-    <a href="#" class="alert-banner__link js-calendar-btn">📅 カレンダーに登録</a>
-  </div>
-
-  <section class="filters">
-    <div class="quick-filters js-quick-filters"></div>
-    <div class="filter-group">
-      <div class="filter-group__label">月別</div>
-      <div class="filter-group__buttons js-month-filter"></div>
+  <section class="page page--plans js-page js-page-plans">
+    <div class="station-toggle-wrapper">
+      <div class="station-toggle js-station-toggle"></div>
     </div>
-    <div class="filter-group">
-      <div class="filter-group__label">休暇タイプ</div>
-      <div class="filter-group__buttons js-type-filter"></div>
+    <div class="alert-banner js-alert-banner">
+      <span class="alert-banner__icon">⚠️</span>
+      <span class="js-alert-text"></span>
+      <a href="#" class="alert-banner__link js-calendar-btn">📅 カレンダーに登録</a>
+    </div>
+    <section class="filters">
+      <div class="quick-filters js-quick-filters"></div>
+      <div class="filter-group">
+        <div class="filter-group__label">月別</div>
+        <div class="filter-group__buttons js-month-filter"></div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-group__label">休暇タイプ</div>
+        <div class="filter-group__buttons js-type-filter"></div>
+      </div>
+    </section>
+    <div class="result-count js-result-count"></div>
+    <div class="cards-container">
+      <div class="cards js-cards"></div>
     </div>
   </section>
 
-  <div class="result-count js-result-count"></div>
+  <section class="page page--map js-page js-page-map" style="display:none">
+    <div class="map-section js-map-section"></div>
+  </section>
 
-  <main class="cards-container">
-    <div class="cards js-cards"></div>
-  </main>
+  <section class="page page--rules js-page js-page-rules" style="display:none">
+    <div class="rules-section js-rules-section"></div>
+  </section>
 
   <footer class="footer">
     <div class="footer__title">ご注意</div>
@@ -56,6 +70,7 @@
   </div>
 
   <script src="js/data.js"></script>
+  <script src="js/map.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

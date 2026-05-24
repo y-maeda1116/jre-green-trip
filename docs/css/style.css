@@ -508,8 +508,294 @@ body {
   background: var(--border);
 }
 
+/* Nav Tabs */
+.nav-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.nav-tabs__btn {
+  padding: 0.4rem 0.85rem;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: white;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.nav-tabs__btn:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.nav-tabs__btn--active {
+  background: white;
+  color: var(--primary);
+  border-color: white;
+  font-weight: 600;
+}
+
+/* Station Toggle Wrapper */
+.station-toggle-wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem 0;
+}
+
+/* Page Sections */
+.page--map,
+.page--rules {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2rem;
+}
+
+/* Map Page */
+.map-wrapper {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.map-departure-toggle {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.map-departure-toggle__btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.map-departure-toggle__btn:hover {
+  background: var(--primary-light);
+}
+
+.map-departure-toggle__btn--active {
+  background: var(--primary);
+  color: white;
+}
+
+.map-summary {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--primary);
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  background: var(--primary-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: 1.25rem;
+}
+
+.map-note {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+/* Route Card */
+.route-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.route-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.route-card__color {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.route-card__name {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.route-card__tagline {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  background: var(--bg);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+}
+
+/* Route Timeline */
+.route-timeline {
+  border-left: 3px solid var(--route-color, var(--border));
+  padding: 0 0 0 16px;
+  margin-left: 5px;
+}
+
+.route-station {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 0.85rem;
+  position: relative;
+}
+
+.route-station::before {
+  content: "";
+  position: absolute;
+  left: -22px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--route-color, var(--border));
+  border: 2px solid var(--surface);
+  z-index: 1;
+}
+
+.route-station--farthest {
+  font-weight: 600;
+}
+
+.route-station--farthest::before {
+  width: 13px;
+  height: 13px;
+  left: -23.5px;
+  box-shadow: 0 0 0 3px var(--route-color-light, var(--bg));
+}
+
+.route-station__name {
+  color: var(--text);
+}
+
+.route-station__time {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+.route-station--farthest .route-station__time {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* Rules Page */
+.rules-wrapper {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.rules-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.rules-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+}
+
+.rule-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid;
+}
+
+.rule-card--pro {
+  border-left-color: var(--primary);
+}
+
+.rule-card--warning {
+  border-left-color: var(--accent);
+}
+
+.rule-card__icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.rule-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.rule-card__description {
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.7;
+  margin-bottom: 0.75rem;
+}
+
+.rule-card__example {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  background: var(--bg);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  line-height: 1.6;
+}
+
+.rules-tips-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.rules-tips-list {
+  list-style: none;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.rules-tips-list li {
+  padding-left: 1.25rem;
+  position: relative;
+}
+
+.rules-tips-list li::before {
+  content: "!";
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+  color: var(--accent);
+}
+
 @media (max-width: 480px) {
   .header__title { font-size: 1.3rem; }
   .header { padding: 1.5rem 1rem; }
   .station-toggle__btn { padding: 0.4rem 1rem; font-size: 0.8rem; }
+  .nav-tabs__btn { font-size: 0.75rem; padding: 0.35rem 0.65rem; }
+  .map-departure-toggle__btn { font-size: 0.8rem; padding: 0.4rem 0.75rem; }
 }

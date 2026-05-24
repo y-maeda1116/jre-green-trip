@@ -5,7 +5,10 @@
     baseStation: "all",
     month: "all",
     type: "all",
-    quickFilter: null
+    quickFilter: null,
+    currentPage: "plans",
+    mapRendered: false,
+    rulesRendered: false
   };
 
   const monthNames = [
@@ -407,6 +410,36 @@
         $(".js-calendar-modal-overlay").classList.add("calendar-modal-overlay--hidden");
       }
     });
+
+    $(".js-nav-tabs").addEventListener("click", function(e) {
+      var btn = e.target.closest("[data-page]");
+      if (!btn) return;
+      switchPage(btn.dataset.page);
+    });
+  }
+
+  function switchPage(page) {
+    state.currentPage = page;
+    $$(".js-page").forEach(function(p) {
+      p.style.display = "none";
+    });
+    var target = $(".js-page-" + page);
+    if (target) target.style.display = "";
+
+    $$(".nav-tabs__btn").forEach(function(btn) {
+      btn.classList.remove("nav-tabs__btn--active");
+    });
+    var activeBtn = document.querySelector('[data-page="' + page + '"]');
+    if (activeBtn) activeBtn.classList.add("nav-tabs__btn--active");
+
+    if (page === "map" && !state.mapRendered) {
+      renderMapPage("tokyo");
+      state.mapRendered = true;
+    }
+    if (page === "rules" && !state.rulesRendered) {
+      renderRulesPage();
+      state.rulesRendered = true;
+    }
   }
 
   document.addEventListener("DOMContentLoaded", init);
