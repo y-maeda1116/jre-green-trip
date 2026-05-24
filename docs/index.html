@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JRE BANK グリーン券 旅プラン — 期限切れ前にサクッと贅沢</title>
+  <meta name="description" content="JRE BANKの普通列車グリーン券（有効期限3ヶ月）を無駄なく消費するための日帰り・半日旅プラン集。東京・品川発。">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚃</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <h1 class="header__title">🚃 JRE BANK グリーン券 旅プラン</h1>
+    <p class="header__subtitle">期限切れ前にサクッと贅沢 — 普通列車グリーン車で行く日帰り・半日旅</p>
+    <div class="station-toggle js-station-toggle"></div>
+  </header>
+
+  <div class="alert-banner js-alert-banner">
+    <span class="alert-banner__icon">⚠️</span>
+    <span class="js-alert-text"></span>
+    <a href="#" class="alert-banner__link js-calendar-btn">📅 カレンダーに登録</a>
+  </div>
+
+  <section class="filters">
+    <div class="quick-filters js-quick-filters"></div>
+    <div class="filter-group">
+      <div class="filter-group__label">月別</div>
+      <div class="filter-group__buttons js-month-filter"></div>
+    </div>
+    <div class="filter-group">
+      <div class="filter-group__label">休暇タイプ</div>
+      <div class="filter-group__buttons js-type-filter"></div>
+    </div>
+  </section>
+
+  <div class="result-count js-result-count"></div>
+
+  <main class="cards-container">
+    <div class="cards js-cards"></div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__title">ご注意</div>
+    <ul class="footer__notes">
+      <li>この特典は「普通列車（快速・普通）の2階建てグリーン車」のみ対象です。特急（ひたち、踊り子、成田エクスプレスなど）には使用できません。</li>
+      <li>ルート・所要時間は目安です。運行状況により異なる場合があります。</li>
+      <li>現地予算は目安です。実際の金額とは異なる場合があります。</li>
+      <li>JR東日本のサービス内容は予告なく変更される場合があります。</li>
+      <li>本サイトは非公式です。JR東日本との関係はありません。</li>
+    </ul>
+  </footer>
+
+  <div class="calendar-modal-overlay calendar-modal-overlay--hidden js-calendar-modal-overlay">
+    <div class="js-calendar-modal"></div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
