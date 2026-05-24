@@ -36,13 +36,16 @@
   function renderStationToggle() {
     const container = $(".js-station-toggle");
     container.innerHTML = "";
-    const stations = [
+    var stations = [
       { value: "all", label: "全駅" },
-      { value: "東京", label: "東京駅発" },
-      { value: "品川", label: "品川駅発" }
+      { value: "東京", label: "東京" },
+      { value: "品川", label: "品川" },
+      { value: "新宿", label: "新宿" },
+      { value: "上野", label: "上野" },
+      { value: "横浜", label: "横浜" }
     ];
-    stations.forEach(s => {
-      const btn = document.createElement("button");
+    stations.forEach(function(s) {
+      var btn = document.createElement("button");
       btn.className = "station-toggle__btn" + (state.baseStation === s.value ? " station-toggle__btn--active" : "");
       btn.dataset.station = s.value;
       btn.textContent = s.label;

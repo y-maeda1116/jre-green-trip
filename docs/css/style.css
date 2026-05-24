@@ -55,18 +55,30 @@ body {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 0.25rem;
+}
+
+.station-toggle::-webkit-scrollbar {
+  display: none;
 }
 
 .station-toggle__btn {
-  padding: 0.5rem 1.25rem;
+  flex-shrink: 0;
+  padding: 0.45rem 1rem;
   border: 2px solid rgba(255,255,255,0.5);
   border-radius: 999px;
   background: transparent;
   color: white;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .station-toggle__btn:hover {
