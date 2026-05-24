@@ -247,7 +247,11 @@
     const meta = document.createElement("div");
     meta.className = "card__meta";
 
-    const tags = [plan.baseStation + "発", plan.duration];
+    const tags = [plan.baseStation + "発"];
+    if (plan.region) {
+      tags.push(plan.region);
+    }
+    tags.push(plan.duration);
     plan.targetMonth.forEach(function(m) {
       tags.push(monthNames[m]);
     });
