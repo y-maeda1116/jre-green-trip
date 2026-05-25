@@ -92,6 +92,16 @@ body {
   font-weight: 600;
 }
 
+/* Top Disclaimer */
+.top-disclaimer {
+  background: #FFF8E1;
+  color: #795548;
+  text-align: center;
+  font-size: 0.75rem;
+  padding: 0.4rem 1rem;
+  border-bottom: 1px solid #FFE082;
+}
+
 /* Alert Banner */
 .alert-banner {
   background: var(--accent);
