@@ -1,211 +1,106 @@
-# security-base
+# 🚃 JRE BANK グリーン券 旅プラン
 
-GitHubリポジトリのセキュリティ設定を共通管理するためのリポジトリです。
-他のGo/TypeScript/Pythonリポジトリから呼び出される「信頼の源泉」として機能します。
+JRE BANK の「普通列車グリーン券（有効期限3ヶ月）」を無駄なく消費するための、
+日帰り・半日旅プラン集です。東京・品川・新宿・上野・横浜の各駅発。
 
-## 構成
+🌐 **公開サイト**: <https://jre-green.maeda.coffee/>
+
+> 参考用の非公式サイトです。JR東日本とは関係ありません。
+> 実際に行く際はご自身で最新情報をお調べください。
+
+## サイトの特徴
+
+3つのページで構成された Vanilla JS（フレームワーク不使用）の静的サイトです。
+
+| ページ | 内容 |
+|--------|------|
+| 行き先を探す | プランカード一覧。発駅 / 月別 / 休暇タイプ（全休・午後休）でフィルタ可能 |
+| 運行マップ・時間 | 6路線の普通列車グリーン車で行ける範囲と所要時間（東京発・新宿発を切替） |
+| 利用ルール | グリーン券の乗り継ぎルール・注意点 |
+
+追加機能:
+
+- **期限アラートバナー** — 現在日付から最も近い季節ブロックの有効期限（月末）までの日数を表示
+- **Googleカレンダー登録** — 期限をワンクリックでカレンダーに追加
+- **クイックフィルタ** — 「今月の午後休プラン」「今月・来月の全休プラン」
+
+## 対応路線（普通列車グリーン車）
+
+東海道線・伊東線（沼津・伊東）、常磐線（水戸・高萩）、高崎線（前橋）、
+宇都宮線（宇都宮）、総武快速線・房総（成田・君津・成東）、中央線快速・青梅線（大月・青梅）
+
+## ディレクトリ構成
 
 ```
-security-base/
-├── .github/
-│   ├── workflows/              # 再利用可能ワークフロー
-│   │   ├── ci.yml              # Python CI (uv + ruff + mypy + pytest + pip-audit)
-│   │   ├── reusable-go-security.yml
-│   │   ├── reusable-py-security.yml
-│   │   ├── reusable-ts-security.yml
-│   │   └── reusable-secret-scan.yml
-│   └── dependabot.yml          # Dependabot version updates
-├── configs/                    # 共通Lint設定
-│   ├── .golangci.yml
-│   └── .eslintrc.base.json
-├── scripts/                    # 自動化スクリプト
-│   └── apply-security.sh
-├── src/                        # Python package
-├── tests/                      # Python tests
-├── pyproject.toml              # Python project configuration
+jre-green-trip/
+├── docs/                     # GitHub Pages で公開されるサイト本体
+│   ├── index.html            # 3ページ構成のエントリポイント
+│   ├── CNAME                 # カスタムドメイン (jre-green.maeda.coffee)
+│   ├── css/style.css
+│   └── js/
+│       ├── data.js           # PLANS（旅プラン）+ SEASON_BLOCKS ★編集対象
+│       ├── map.js            # ROUTE_LINES（路線・所要時間）・ルール本文
+│       └── app.js            # フィルタ・カード描画・期限アラート
+├── .github/workflows/pages.yml  # docs/ → GitHub Pages 自動デプロイ
 └── README.md
 ```
 
-## セキュリティ機能
+## プランの追加方法
 
-| 機能 | 言語 | 説明 |
-|------|------|------|
-| Python CI | Python | uv + ruff (Sルール) + mypy (strict) + pytest + pip-audit |
-| Reusable Go Security | Go | golangci-lint (gosec, errcheck等) + govulncheck |
-| Reusable Python Security | Python | pip-audit + bandit (外部ファイル不要) |
-| Reusable TypeScript Security | TypeScript | npm audit + eslint-plugin-security |
-| Reusable Secret Scan | 共通 | Trivy または Gitleaks によるシークレット検出 |
-| Dependabot | 共通 | GitHub Actions の週次バージョンアップ自動更新 |
-| apply-security.sh | 共通 | 脆弱性アラート・ブランチ保護の一括設定 |
+`docs/js/data.js` の `PLANS` 配列にオブジェクトを追加します。
 
-## Python プロジェクトテンプレート
-
-このリポジトリは Python プロジェクトのセキュリティ重視テンプレートとしても機能します。
-
-### 特徴
-
-- **uv** による高速パッケージ管理 (`pyproject.toml` に集約)
-- **Ruff** で Lint/Format + `S` (Security) ルール有効
-- **mypy** strict モードで厳格な型チェック
-- **bandit** 設定を `[tool.bandit]` セクションに集約 (外部ファイル不要)
-- **pip-audit** で依存パッケージの脆弱性可視化
-- **pytest** + カバレッジ80%必須
-
-### CI パイプライン
-
-```
-uv sync → ruff check → ruff format → mypy → pytest → pip-audit
-```
-
-### 新規プロジェクトでの使い方
-
-```bash
-# 1. リポジトリをクローン
-git clone https://github.com/y-maeda1116/security-base.git my-project
-cd my-project
-
-# 2. uv で依存関係をインストール
-uv sync --group dev
-
-# 3. 開発
-uv run pytest
-uv run ruff check .
-uv run mypy src
-```
-
-## 他リポジトリからの呼び出し方 (Reusable Workflows)
-
-### Goプロジェクトのセキュリティチェック
-
-```yaml
-# .github/workflows/go-security.yml
-name: Go Security
-on:
-  pull_request:
-  push:
-    branches: [main]
-
-jobs:
-  go-security:
-    uses: y-maeda1116/security-base/.github/workflows/reusable-go-security.yml@main
-    with:
-      go-version: "1.26"
-      golangci-lint-version: "v2.11.4"
-```
-
-### Pythonプロジェクトのセキュリティチェック
-
-```yaml
-# .github/workflows/py-security.yml
-name: Python Security
-on:
-  pull_request:
-  push:
-    branches: [main]
-
-jobs:
-  py-security:
-    uses: y-maeda1116/security-base/.github/workflows/reusable-py-security.yml@main
-    with:
-      python-version: "3.13"
-```
-
-### TypeScriptプロジェクトのセキュリティチェック
-
-```yaml
-# .github/workflows/ts-security.yml
-name: TypeScript Security
-on:
-  pull_request:
-  push:
-    branches: [main]
-
-jobs:
-  ts-security:
-    uses: y-maeda1116/security-base/.github/workflows/reusable-ts-security.yml@main
-    with:
-      node-version: "24"
-      package-manager: "npm"
-```
-
-### シークレットスキャン
-
-```yaml
-# .github/workflows/secret-scan.yml
-name: Secret Scan
-on:
-  pull_request:
-  push:
-    branches: [main]
-
-jobs:
-  secret-scan:
-    uses: y-maeda1116/security-base/.github/workflows/reusable-secret-scan.yml@main
-    with:
-      scan-tool: "trivy"
-```
-
-### TrivyとGitleaksを両方使う場合
-
-```yaml
-# .github/workflows/secret-scan.yml
-name: Secret Scan
-on:
-  pull_request:
-  push:
-    branches: [main]
-
-jobs:
-  trivy-scan:
-    uses: y-maeda1116/security-base/.github/workflows/reusable-secret-scan.yml@main
-    with:
-      scan-tool: "trivy"
-
-  gitleaks-scan:
-    uses: y-maeda1116/security-base/.github/workflows/reusable-secret-scan.yml@main
-    with:
-      scan-tool: "gitleaks"
-```
-
-## 共通設定ファイルの使い方
-
-### Go (golangci-lint v2)
-
-```bash
-curl -o .golangci.yml https://raw.githubusercontent.com/y-maeda1116/security-base/main/configs/.golangci.yml
-```
-
-有効な linter: gosec, errcheck, govet, staticcheck, unused, ineffassign
-
-### TypeScript (ESLint)
-
-```bash
-npm install --save-dev eslint eslint-plugin-security
-```
-
-```jsonc
-// .eslintrc.json
+```js
 {
-  "extends": [
-    "./node_modules/y-maeda1116-security-base/configs/.eslintrc.base.json"
-  ]
+  id: "tokyo-narita-06",            // 一意ID（発駅-目的地-月）
+  baseStation: "東京",               // 発駅（東京/品川/新宿/上野/横浜、複数可は "東京・品川"）
+  targetMonth: [6],                  // 対象月の配列
+  seasonBlock: "5-7月期（4月進呈分）", // 季節ブロック（SEASON_BLOCKS に対応）
+  title: "成田山新勝寺のうなぎ夕食プラン",
+  type: "午後休",                    // "全休" or "午後休"
+  route: "成田線（快速・普通列車のグリーン車）",
+  duration: "片道：約1時間15分",
+  budget: "現地予算：3,000〜4,000円（うなぎ代含む）",
+  description: "…",
+  spots: ["成田山新勝寺", "表参道（うなぎ屋）", "成田山公園"],
+  scheduleSample: "15:00 東京駅発 → 16:15 成田駅着 → …",
+  region: "千葉"                     // 任意。地域タグ
 }
 ```
 
-### Python (bandit)
+### 季節ブロック（`SEASON_BLOCKS`）
 
-外部設定ファイルは不要です。`pyproject.toml` の `[tool.bandit]` セクションをコピーして使用してください。
+グリーン券は3ヶ月ごとの季節ブロック制。進呈月と有効期限（月末）の対応:
 
-## リポジトリ設定の自動適用
+| ブロック | 進呈月 | 有効期限（月末） |
+|----------|--------|------------------|
+| 2-4月期 | 1月進呈分 | 4月 |
+| 5-7月期 | 4月進呈分 | 7月 |
+| 8-10月期 | 7月進呈分 | 10月 |
+| 12-1月期 | 11月進呈分 | 1月 |
+
+> 例: 6月・7月に使えるのは基本的に「5-7月期（4月進呈分）」の券。
+
+## 開発・デプロイ
 
 ```bash
-# gh 認証済みの場合は GITHUB_TOKEN は省略可能
-./scripts/apply-security.sh y-maeda1116/your-repo
+# ローカル確認（docs/ をブラウザで直接開く、または任意のライブサーバー）
+open docs/index.html
+
+# デプロイは main ブランチへの push で自動（pages.yml が docs/ を Pages へ公開）
+git push origin main
 ```
 
-適用される設定:
-- 脆弱性アラート (Dependabot alerts) の有効化
-- `main` ブランチの保護設定:
-  - 管理者にもルール適用 (`enforce_admins`)
-  - ステータスチェック合格必須
-  - フォースpush・ブランチ削除を禁止
+ビルドステップはありません。`docs/` がそのまま公開されます。
+
+## 補足: セキュリティ設定ファイルについて
+
+本リポジトリは [security-base](https://github.com/y-maeda1116/security-base) 由来のファイルを継承しており、
+以下は旅プランサイト本体ではなくセキュリティCI設定として含まれています。
+
+- `.github/workflows/ci.yml`, `reusable-*-security.yml`, `reusable-secret-scan.yml`
+- `.github/dependabot.yml`
+- `configs/`（golangci-lint / ESLint 共通設定）
+- `tools/sync/`（他リポジトリへセキュリティ設定を同期する Go ツール）
+- `src/`, `tests/`, `pyproject.toml`（Python セキュリティテンプレート）
+
+サイト本体に変更を加える場合は `docs/` 配下のみで完結します。
