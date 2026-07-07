@@ -834,11 +834,6 @@ body {
   white-space: nowrap;
 }
 
-.route-compare__th--green {
-  background: var(--route-color-light);
-  color: var(--route-color);
-}
-
 .route-compare__th--station {
   text-align: left;
 }

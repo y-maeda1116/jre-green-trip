@@ -84,8 +84,8 @@ var ROUTE_LINES = [
   {
     name: "総武快速線・房総",
     tagline: "成田空港・君津・成東方面（千葉）",
-    color: "#00838F",
-    colorLight: "#E0F7FA",
+    color: "#1565C0",
+    colorLight: "#E3F2FD",
     stations: [
       { name: "錦糸町", fromTokyo: 10, fromShinjuku: null },
       { name: "船橋", fromTokyo: 20, fromShinjuku: null },
@@ -227,7 +227,7 @@ var renderRulesPage;
 
     COMPARE_COLUMNS.forEach(function (col) {
       var th = document.createElement("th");
-      th.className = "route-compare__th" + (col.highlight ? " route-compare__th--green" : "");
+      th.className = "route-compare__th";
       th.textContent = col.label;
       headRow.appendChild(th);
     });
