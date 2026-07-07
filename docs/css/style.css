@@ -795,10 +795,125 @@ body {
   color: var(--accent);
 }
 
+/* Timetable Page */
+.page--timetable {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2rem;
+}
+
+.timetable-wrapper {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.timetable-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.timetable-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.timetable-note {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+.timetable-note--important {
+  color: var(--primary-dark);
+  background: var(--primary-light);
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+}
+
+.timetable-group {
+  margin-bottom: 1.5rem;
+}
+
+.timetable-group__title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  padding-left: 0.5rem;
+  border-left: 4px solid var(--primary);
+}
+
+.timetable-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.timetable {
+  width: 100%;
+  min-width: 340px;
+  border-collapse: collapse;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  font-size: 0.85rem;
+}
+
+.timetable__th {
+  padding: 0.6rem 0.5rem;
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.timetable__th--green {
+  background: var(--primary-dark);
+}
+
+.timetable thead .timetable__th--station {
+  text-align: left;
+}
+
+.timetable tbody .timetable__th--station {
+  background: var(--bg);
+  color: var(--text);
+  font-weight: 600;
+  text-align: left;
+}
+
+.timetable__td {
+  padding: 0.6rem 0.5rem;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.timetable__td--green {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.timetable__td--na {
+  color: var(--text-secondary);
+  opacity: 0.45;
+}
+
 @media (max-width: 480px) {
   .header__title { font-size: 1.3rem; }
   .header { padding: 1.5rem 1rem; }
   .station-toggle__btn { padding: 0.4rem 1rem; font-size: 0.8rem; }
   .nav-tabs__btn { font-size: 0.75rem; padding: 0.35rem 0.65rem; }
   .map-departure-toggle__btn { font-size: 0.8rem; padding: 0.4rem 0.75rem; }
+  .timetable__th, .timetable__td { padding: 0.45rem 0.4rem; }
 }
