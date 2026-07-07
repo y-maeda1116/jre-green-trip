@@ -8,8 +8,7 @@
     quickFilter: null,
     currentPage: "plans",
     mapRendered: false,
-    rulesRendered: false,
-    timetableRendered: false
+    rulesRendered: false
   };
 
   const monthNames = [
@@ -436,10 +435,6 @@
     if (page === "map" && !state.mapRendered) {
       renderMapPage("tokyo");
       state.mapRendered = true;
-    }
-    if (page === "timetable" && !state.timetableRendered) {
-      renderTimeTablePage();
-      state.timetableRendered = true;
     }
     if (page === "rules" && !state.rulesRendered) {
       renderRulesPage();
