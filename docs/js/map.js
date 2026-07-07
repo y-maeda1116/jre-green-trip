@@ -13,6 +13,14 @@ var ROUTE_LINES = [
       { name: "熱海", fromTokyo: 100, fromShinjuku: null },
       { name: "伊東", fromTokyo: 120, fromShinjuku: null, isFarthest: true },
       { name: "沼津", fromTokyo: 135, fromShinjuku: null, isFarthest: true }
+    ],
+    // 東京発 主要駅の所要時間（目安・分）。null = 直達なし。green は stations.fromTokyo と一致。
+    compare: [
+      { station: "横浜", green: 25, express: null, shinkansen: 18 },
+      { station: "小田原", green: 80, express: null, shinkansen: 33 },
+      { station: "熱海", green: 100, express: 85, shinkansen: 45 },
+      { station: "伊東", green: 120, express: 100, shinkansen: null },
+      { station: "沼津", green: 135, express: null, shinkansen: null }
     ]
   },
   {
@@ -28,6 +36,11 @@ var ROUTE_LINES = [
       { name: "土浦", fromTokyo: 65, fromShinjuku: null },
       { name: "水戸", fromTokyo: 120, fromShinjuku: null },
       { name: "高萩", fromTokyo: 140, fromShinjuku: null, isFarthest: true }
+    ],
+    compare: [
+      { station: "土浦", green: 65, express: 45, shinkansen: null },
+      { station: "水戸", green: 120, express: 75, shinkansen: null },
+      { station: "いわき", green: null, express: 130, shinkansen: null }
     ]
   },
   {
@@ -42,6 +55,12 @@ var ROUTE_LINES = [
       { name: "熊谷", fromTokyo: 55, fromShinjuku: 60 },
       { name: "高崎", fromTokyo: 80, fromShinjuku: 90 },
       { name: "前橋", fromTokyo: 100, fromShinjuku: 115, isFarthest: true }
+    ],
+    compare: [
+      { station: "大宮", green: 30, express: null, shinkansen: 20 },
+      { station: "熊谷", green: 55, express: null, shinkansen: 35 },
+      { station: "高崎", green: 80, express: null, shinkansen: 50 },
+      { station: "前橋", green: 100, express: null, shinkansen: null }
     ]
   },
   {
@@ -55,6 +74,11 @@ var ROUTE_LINES = [
       { name: "大宮", fromTokyo: 30, fromShinjuku: 35 },
       { name: "小山", fromTokyo: 60, fromShinjuku: 65 },
       { name: "宇都宮", fromTokyo: 110, fromShinjuku: 115, isFarthest: true }
+    ],
+    compare: [
+      { station: "小山", green: 60, express: null, shinkansen: 40 },
+      { station: "宇都宮", green: 110, express: null, shinkansen: 75 },
+      { station: "郡山", green: null, express: null, shinkansen: 90 }
     ]
   },
   {
@@ -71,6 +95,11 @@ var ROUTE_LINES = [
       { name: "君津", fromTokyo: 80, fromShinjuku: null, isFarthest: true },
       { name: "上総一ノ宮", fromTokyo: 80, fromShinjuku: null, isFarthest: true },
       { name: "成田空港", fromTokyo: 90, fromShinjuku: null, isFarthest: true }
+    ],
+    compare: [
+      { station: "千葉", green: 40, express: 30, shinkansen: null },
+      { station: "成田", green: 75, express: 55, shinkansen: null },
+      { station: "成田空港", green: 90, express: 60, shinkansen: null }
     ]
   },
   {
@@ -87,69 +116,16 @@ var ROUTE_LINES = [
       { name: "高尾", fromTokyo: 65, fromShinjuku: 55 },
       { name: "青梅", fromTokyo: 75, fromShinjuku: 65, isFarthest: true },
       { name: "大月", fromTokyo: 100, fromShinjuku: 95, isFarthest: true }
-    ]
-  }
-];
-
-// 東京駅発 → 主要駅の所要時間 早見表（目安・分）
-// green / express / shinkansen のいずれかは null（直達なし）。
-// green の分数は ROUTE_LINES の fromTokyo と一致させること。
-var TOKYO_TIME_TABLE = [
-  {
-    direction: "東海道・伊豆方面（神奈川・静岡）",
-    rows: [
-      { station: "横浜",   green: 25,  express: null, shinkansen: 18 },
-      { station: "小田原", green: 80,  express: null, shinkansen: 33 },
-      { station: "熱海",   green: 100, express: 85,   shinkansen: 45 },
-      { station: "伊東",   green: 120, express: 100,  shinkansen: null },
-      { station: "沼津",   green: 135, express: null, shinkansen: null }
-    ]
-  },
-  {
-    direction: "常磐・日立方面（茨城・福島）",
-    rows: [
-      { station: "土浦",   green: 65,  express: 45,  shinkansen: null },
-      { station: "水戸",   green: 120, express: 75,  shinkansen: null },
-      { station: "いわき", green: null, express: 130, shinkansen: null }
-    ]
-  },
-  {
-    direction: "高崎・上越方面（埼玉・群馬）",
-    rows: [
-      { station: "大宮", green: 30,  express: null, shinkansen: 20 },
-      { station: "熊谷", green: 55,  express: null, shinkansen: 35 },
-      { station: "高崎", green: 80,  express: null, shinkansen: 50 },
-      { station: "前橋", green: 100, express: null, shinkansen: null }
-    ]
-  },
-  {
-    direction: "宇都宮・東北方面（栃木・福島）",
-    rows: [
-      { station: "小山",   green: 60,   express: null, shinkansen: 40 },
-      { station: "宇都宮", green: 110,  express: null, shinkansen: 75 },
-      { station: "郡山",   green: null, express: null, shinkansen: 90 }
-    ]
-  },
-  {
-    direction: "総武・房総・成田方面（千葉）",
-    rows: [
-      { station: "千葉",     green: 40, express: 30, shinkansen: null },
-      { station: "成田",     green: 75, express: 55, shinkansen: null },
-      { station: "成田空港", green: 90, express: 60, shinkansen: null }
-    ]
-  },
-  {
-    direction: "中央・甲府方面（東京・山梨）",
-    rows: [
-      { station: "八王子", green: 55,  express: null, shinkansen: null },
-      { station: "大月",   green: 100, express: null, shinkansen: null }
+    ],
+    compare: [
+      { station: "八王子", green: 55, express: null, shinkansen: null },
+      { station: "大月", green: 100, express: null, shinkansen: null }
     ]
   }
 ];
 
 var renderMapPage;
 var renderRulesPage;
-var renderTimeTablePage;
 
 (function () {
   "use strict";
@@ -157,6 +133,12 @@ var renderTimeTablePage;
   function $(sel) { return document.querySelector(sel); }
 
   var mapDeparture = "tokyo";
+
+  var COMPARE_COLUMNS = [
+    { key: "green", label: "グリーン車", highlight: true },
+    { key: "express", label: "特急", highlight: false },
+    { key: "shinkansen", label: "新幹線", highlight: false }
+  ];
 
   function getMaxTime(route, departure) {
     var max = 0;
@@ -208,9 +190,78 @@ var renderTimeTablePage;
     return div;
   }
 
+  function createCompareCell(value, highlight) {
+    var td = document.createElement("td");
+    td.className = "route-compare__td" + (highlight ? " route-compare__td--green" : "");
+    if (value === null) {
+      td.textContent = "—";
+      td.classList.add("route-compare__td--na");
+    } else {
+      td.textContent = "約" + value + "分";
+    }
+    return td;
+  }
+
+  function createCompareSection(route) {
+    var section = document.createElement("div");
+    section.className = "route-compare";
+
+    var title = document.createElement("div");
+    title.className = "route-compare__title";
+    title.textContent = "列車種別比較（東京発）";
+    section.appendChild(title);
+
+    var scroll = document.createElement("div");
+    scroll.className = "route-compare__scroll";
+
+    var table = document.createElement("table");
+    table.className = "route-compare__table";
+
+    var thead = document.createElement("thead");
+    var headRow = document.createElement("tr");
+
+    var headStation = document.createElement("th");
+    headStation.className = "route-compare__th route-compare__th--station";
+    headStation.textContent = "行き先";
+    headRow.appendChild(headStation);
+
+    COMPARE_COLUMNS.forEach(function (col) {
+      var th = document.createElement("th");
+      th.className = "route-compare__th" + (col.highlight ? " route-compare__th--green" : "");
+      th.textContent = col.label;
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    var tbody = document.createElement("tbody");
+    route.compare.forEach(function (row) {
+      var tr = document.createElement("tr");
+
+      var stationTh = document.createElement("th");
+      stationTh.className = "route-compare__th route-compare__th--station";
+      stationTh.scope = "row";
+      stationTh.textContent = row.station;
+      tr.appendChild(stationTh);
+
+      COMPARE_COLUMNS.forEach(function (col) {
+        tr.appendChild(createCompareCell(row[col.key], col.highlight));
+      });
+
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+
+    scroll.appendChild(table);
+    section.appendChild(scroll);
+    return section;
+  }
+
   function createRouteCard(route, departure) {
     var card = document.createElement("div");
     card.className = "route-card";
+    card.style.setProperty("--route-color", route.color);
+    card.style.setProperty("--route-color-light", route.colorLight);
 
     var header = document.createElement("div");
     header.className = "route-card__header";
@@ -234,8 +285,6 @@ var renderTimeTablePage;
 
     var timeline = document.createElement("div");
     timeline.className = "route-timeline";
-    timeline.style.setProperty("--route-color", route.color);
-    timeline.style.setProperty("--route-color-light", route.colorLight);
 
     route.stations.forEach(function (station) {
       var time = departure === "tokyo" ? station.fromTokyo : station.fromShinjuku;
@@ -259,6 +308,11 @@ var renderTimeTablePage;
     });
 
     card.appendChild(timeline);
+
+    if (route.compare && route.compare.length) {
+      card.appendChild(createCompareSection(route));
+    }
+
     return card;
   }
 
@@ -272,6 +326,11 @@ var renderTimeTablePage;
 
     var toggle = createDepartureToggle(mapDeparture);
     wrapper.appendChild(toggle);
+
+    var compareNote = document.createElement("div");
+    compareNote.className = "map-note";
+    compareNote.textContent = "各路線カードの下部に、列車種別（グリーン車／特急／新幹線）の所要時間比較を掲載。東京発基準の目安で、特急・新幹線はグリーン券の対象外（参考値）です。";
+    wrapper.appendChild(compareNote);
 
     var sorted = ROUTE_LINES
       .filter(function (route) { return isAccessible(route, mapDeparture); })
@@ -388,114 +447,6 @@ var renderTimeTablePage;
     });
 
     wrapper.appendChild(tipsList);
-    container.appendChild(wrapper);
-  };
-
-  /* 東京発 時間早見表 ---------------------------------------------- */
-  var TIMETABLE_COLUMNS = [
-    { key: "green", label: "グリーン車", highlight: true },
-    { key: "express", label: "特急", highlight: false },
-    { key: "shinkansen", label: "新幹線", highlight: false }
-  ];
-
-  function createTimeCell(value, highlight) {
-    var td = document.createElement("td");
-    td.className = "timetable__td" + (highlight ? " timetable__td--green" : "");
-    if (value === null) {
-      td.textContent = "—";
-      td.classList.add("timetable__td--na");
-    } else {
-      td.textContent = "約" + value + "分";
-    }
-    return td;
-  }
-
-  function createTimetableGroup(group) {
-    var wrap = document.createElement("div");
-    wrap.className = "timetable-group";
-
-    var title = document.createElement("h3");
-    title.className = "timetable-group__title";
-    title.textContent = group.direction;
-    wrap.appendChild(title);
-
-    var scroll = document.createElement("div");
-    scroll.className = "timetable-scroll";
-
-    var table = document.createElement("table");
-    table.className = "timetable";
-
-    var thead = document.createElement("thead");
-    var headRow = document.createElement("tr");
-
-    var headStation = document.createElement("th");
-    headStation.className = "timetable__th timetable__th--station";
-    headStation.textContent = "行き先";
-    headRow.appendChild(headStation);
-
-    TIMETABLE_COLUMNS.forEach(function (col) {
-      var th = document.createElement("th");
-      th.className = "timetable__th" + (col.highlight ? " timetable__th--green" : "");
-      th.textContent = col.label;
-      headRow.appendChild(th);
-    });
-    thead.appendChild(headRow);
-    table.appendChild(thead);
-
-    var tbody = document.createElement("tbody");
-    group.rows.forEach(function (row) {
-      var tr = document.createElement("tr");
-
-      var stationTh = document.createElement("th");
-      stationTh.className = "timetable__th timetable__th--station";
-      stationTh.scope = "row";
-      stationTh.textContent = row.station;
-      tr.appendChild(stationTh);
-
-      TIMETABLE_COLUMNS.forEach(function (col) {
-        tr.appendChild(createTimeCell(row[col.key], col.highlight));
-      });
-
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-
-    scroll.appendChild(table);
-    wrap.appendChild(scroll);
-    return wrap;
-  }
-
-  renderTimeTablePage = function () {
-    var container = $(".js-timetable-section");
-    while (container.firstChild) container.removeChild(container.firstChild);
-
-    var wrapper = document.createElement("div");
-    wrapper.className = "timetable-wrapper";
-
-    var title = document.createElement("h2");
-    title.className = "timetable-title";
-    title.textContent = "東京駅発 — 列車種別ごとの所要時間 早見表";
-    wrapper.appendChild(title);
-
-    var subtitle = document.createElement("p");
-    subtitle.className = "timetable-subtitle";
-    subtitle.textContent = "同じ行き先でも列車種別で所要時間が変わります。グリーン券で行ける範囲と、特急・新幹線との比較の目安です。";
-    wrapper.appendChild(subtitle);
-
-    var important = document.createElement("div");
-    important.className = "timetable-note timetable-note--important";
-    important.textContent = "⚠️ 特急・新幹線はグリーン券の対象外（参考値）。グリーン券が使えるのは「グリーン車」列のみです。";
-    wrapper.appendChild(important);
-
-    TOKYO_TIME_TABLE.forEach(function (group) {
-      wrapper.appendChild(createTimetableGroup(group));
-    });
-
-    var note = document.createElement("div");
-    note.className = "timetable-note";
-    note.textContent = "※ 新幹線は最寄りの新幹線停車駅基準（例: 横浜＝新横浜、沼津＝三島経由）。所要時間は目安です。最新ダイヤは公式時刻表でご確認ください。";
-    wrapper.appendChild(note);
-
     container.appendChild(wrapper);
   };
 })();
