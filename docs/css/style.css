@@ -355,6 +355,107 @@ body {
   margin-bottom: 0.25rem;
 }
 
+.card__schedule-note {
+  margin-top: 0.4rem;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  opacity: 0.85;
+}
+
+.card__transport {
+  margin-bottom: 0.75rem;
+}
+
+.card__transport-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.card__transport-item {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+  background: #FFF3E0;
+  color: #E65100;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* Recommend */
+.recommend {
+  margin-bottom: 1.5rem;
+}
+
+.recommend__head {
+  margin-bottom: 0.75rem;
+}
+
+.recommend__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.recommend__sub {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.recommend__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.75rem;
+}
+
+.recommend-card {
+  padding: 1rem;
+  background: var(--primary-light);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 12px;
+}
+
+.recommend-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.recommend-card__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.recommend-card__meta {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.recommend-card__reasons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.recommend-card__reason {
+  padding: 0.15rem 0.5rem;
+  background: #FFFFFF;
+  color: var(--primary);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
 /* Empty State */
 .empty-state {
   text-align: center;
