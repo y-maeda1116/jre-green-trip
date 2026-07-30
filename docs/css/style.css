@@ -355,6 +355,13 @@ body {
   margin-bottom: 0.25rem;
 }
 
+.card__schedule-note {
+  margin-top: 0.4rem;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  opacity: 0.85;
+}
+
 .card__transport {
   margin-bottom: 0.75rem;
 }

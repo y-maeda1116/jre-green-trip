@@ -312,10 +312,16 @@
 
     const scheduleTitle = document.createElement("div");
     scheduleTitle.className = "card__schedule-title";
-    scheduleTitle.textContent = "スケジュール例";
+    scheduleTitle.textContent = "モデルスケジュール（目安）";
     schedule.appendChild(scheduleTitle);
 
     schedule.appendChild(document.createTextNode(plan.scheduleSample));
+
+    const scheduleNote = document.createElement("div");
+    scheduleNote.className = "card__schedule-note";
+    scheduleNote.textContent = "※目安です。乗車前に当日のダイヤ・営業時間・開催日を公式サイトでご確認ください。";
+    schedule.appendChild(scheduleNote);
+
     card.appendChild(schedule);
 
     return card;
