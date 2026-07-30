@@ -41,6 +41,8 @@ jre-green-trip/
 │       ├── data.js           # PLANS（旅プラン）+ SEASON_BLOCKS ★編集対象
 │       ├── map.js            # ROUTE_LINES（路線・所要時間）・ルール本文
 │       └── app.js            # フィルタ・カード描画・期限アラート
+├── scripts/
+│   └── validate-plans.js     # PLANS / SEASON_BLOCKS の検証スクリプト
 ├── .github/workflows/pages.yml  # docs/ → GitHub Pages 自動デプロイ
 └── README.md
 ```
@@ -52,13 +54,21 @@ jre-green-trip/
 ```js
 {
   id: "tokyo-narita-06",            // 一意ID（発駅-目的地-月）
-  baseStation: "東京",               // 発駅（東京/品川/新宿/上野/横浜、複数可は "東京・品川"）
+  baseStations: ["東京"],            // 発駅の配列（複数発駅は ["東京", "品川"]）
+  destinationStation: "成田",        // 目的地の代表駅
+  oneWayMinutes: 75,                 // 片道所要時間（分）。所要時間順の並べ替えに使用
+  greenCarSection: {                 // 普通列車グリーン券の利用区間
+    from: "東京",
+    to: "成田",
+    line: "成田線"
+  },
+  additionalTransport: [],           // グリーン券対象外の追加移動。{ mode, section, note } の配列
   targetMonth: [6],                  // 対象月の配列
-  seasonBlock: "5-7月期（4月進呈分）", // 季節ブロック（SEASON_BLOCKS に対応）
+  seasonBlock: "4-7月期（4月進呈分）", // 季節ブロック（SEASON_BLOCKS に対応）
   title: "成田山新勝寺のうなぎ夕食プラン",
   type: "午後休",                    // "全休" or "午後休"
   route: "成田線（快速・普通列車のグリーン車）",
-  duration: "片道：約1時間15分",
+  duration: "片道：約1時間15分",      // 表示用文字列（oneWayMinutes と整合させる）
   budget: "現地予算：3,000〜4,000円（うなぎ代含む）",
   description: "…",
   spots: ["成田山新勝寺", "表参道（うなぎ屋）", "成田山公園"],
@@ -67,18 +77,20 @@ jre-green-trip/
 }
 ```
 
+> `baseStation`（文字列）は `baseStations`（配列）へ移行済み。所要時間順の並べ替えには `oneWayMinutes`、グリーン車区間の取得には `greenCarSection` を使用します。
+
 ### 季節ブロック（`SEASON_BLOCKS`）
 
-グリーン券は3ヶ月ごとの季節ブロック制。進呈月と有効期限（月末）の対応:
+グリーン券は進呈月当日から約3ヶ月間有効（進呈月を含む）。進呈月と利用可能期間・有効期限（月末）の対応:
 
-| ブロック | 進呈月 | 有効期限（月末） |
-|----------|--------|------------------|
-| 2-4月期 | 1月進呈分 | 4月 |
-| 5-7月期 | 4月進呈分 | 7月 |
-| 8-10月期 | 7月進呈分 | 10月 |
-| 12-1月期 | 11月進呈分 | 1月 |
+| ブロック | 進呈月 | 利用可能期間 | 有効期限（月末） |
+|----------|--------|--------------|------------------|
+| 1-4月期 | 1月進呈分 | 1月〜4月 | 4月 |
+| 4-7月期 | 4月進呈分 | 4月〜7月 | 7月 |
+| 7-10月期 | 7月進呈分 | 7月〜10月 | 10月 |
+| 11-1月期 | 11月進呈分 | 11月〜1月 | 1月 |
 
-> 例: 6月・7月に使えるのは基本的に「5-7月期（4月進呈分）」の券。
+> 進呈月当日から利用可能です（例: 4月進呈分は4月〜7月末まで）。6月・7月に使えるのは「4-7月期（4月進呈分）」の券。
 
 ## 開発・デプロイ
 
@@ -86,11 +98,23 @@ jre-green-trip/
 # ローカル確認（docs/ をブラウザで直接開く、または任意のライブサーバー）
 open docs/index.html
 
+# PLANS / SEASON_BLOCKS の検証（ID重複・季節ブロック不整合・必須項目不足などを検出）
+node scripts/validate-plans.js
+
 # デプロイは main ブランチへの push で自動（pages.yml が docs/ を Pages へ公開）
 git push origin main
 ```
 
 ビルドステップはありません。`docs/` がそのまま公開されます。
+
+### データ検証（`scripts/validate-plans.js`）
+
+外部ライブラリ不要（Node.js 標準のみ）。`docs/js/data.js` を読み込み、次を検証します。
+
+- **エラー（終了コード1）**: ID重複・ID命名規則（`発駅-目的地-月`）・`baseStations` が許可発駅のみ・`targetMonth` が1〜12の整数で季節ブロックに含まれる・`seasonBlock` が `SEASON_BLOCKS` に存在・`type`（全休/午後休）・`oneWayMinutes` が正の整数・`spots` 1件以上・`scheduleSample` が空でない・`greenCarSection` 設定済み
+- **警告（終了コード0）**: `lastVerified`（最終確認日）未設定・公式リンクが非HTTPS・カバレッジ不足（発駅×季節ブロック、月×休暇タイプ、発駅×休暇タイプ の未カバー組み合わせ）
+
+CI 等で `node scripts/validate-plans.js` を実行し、エラーを検出できます。
 
 ## 補足: セキュリティ設定ファイルについて
 

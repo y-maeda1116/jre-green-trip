@@ -198,7 +198,7 @@
 
   function filterPlans() {
     return PLANS.filter(plan => {
-      if (state.baseStation !== "all" && !plan.baseStation.includes(state.baseStation)) return false;
+      if (state.baseStation !== "all" && !plan.baseStations.includes(state.baseStation)) return false;
       if (state.month !== "all" && !plan.targetMonth.includes(Number(state.month))) return false;
       if (state.type !== "all" && plan.type !== state.type) return false;
       if (state.quickFilter) {
@@ -250,7 +250,7 @@
     const meta = document.createElement("div");
     meta.className = "card__meta";
 
-    const tags = [plan.baseStation + "発"];
+    const tags = [plan.baseStations.join("・") + "発"];
     if (plan.region) {
       tags.push(plan.region);
     }
@@ -289,6 +289,22 @@
       body.appendChild(budgetTag);
     }
 
+    if (plan.additionalTransport && plan.additionalTransport.length) {
+      const transportDiv = document.createElement("div");
+      transportDiv.className = "card__transport";
+      const transportTitle = document.createElement("div");
+      transportTitle.className = "card__transport-title";
+      transportTitle.textContent = "グリーン券対象外の追加移動";
+      transportDiv.appendChild(transportTitle);
+      plan.additionalTransport.forEach(function(t) {
+        const item = document.createElement("div");
+        item.className = "card__transport-item";
+        item.textContent = t.mode + "：" + t.section + (t.note ? "（" + t.note + "）" : "");
+        transportDiv.appendChild(item);
+      });
+      body.appendChild(transportDiv);
+    }
+
     card.appendChild(body);
 
     const schedule = document.createElement("div");
@@ -305,6 +321,72 @@
     return card;
   }
 
+  function renderRecommend() {
+    var section = $(".js-recommend-section");
+    if (!section) return;
+    var subEl = $(".js-recommend-sub");
+    var cardsEl = $(".js-recommend-cards");
+    var result = recommendPlans(PLANS, SEASON_BLOCKS, {
+      now: new Date(),
+      baseStation: state.baseStation,
+      type: state.type
+    });
+    while (cardsEl.firstChild) cardsEl.removeChild(cardsEl.firstChild);
+    if (result.items.length === 0) {
+      section.style.display = "none";
+      return;
+    }
+    section.style.display = "";
+    var deadlineText = result.meta.diffDays !== null && result.meta.diffDays >= 0
+      ? result.meta.activeBlock + "（あと" + result.meta.diffDays + "日）・"
+      : "";
+    var fallbackText = result.meta.isFallback
+      ? "完全一致はありませんが、条件に近い候補を表示しています。"
+      : "いまの発駅・休暇タイプの条件で、上位3件をおすすめします。";
+    subEl.textContent = deadlineText + fallbackText;
+    result.items.forEach(function(item) {
+      cardsEl.appendChild(createRecommendCard(item));
+    });
+  }
+
+  function createRecommendCard(item) {
+    var plan = item.plan;
+    var card = document.createElement("article");
+    card.className = "recommend-card";
+
+    var head = document.createElement("div");
+    head.className = "recommend-card__head";
+
+    var title = document.createElement("div");
+    title.className = "recommend-card__title";
+    title.textContent = plan.title;
+    head.appendChild(title);
+
+    var badge = document.createElement("span");
+    badge.className = "card__type-badge " + (plan.type === "全休" ? "card__type-badge--full" : "card__type-badge--half");
+    badge.textContent = plan.type;
+    head.appendChild(badge);
+
+    card.appendChild(head);
+
+    var meta = document.createElement("div");
+    meta.className = "recommend-card__meta";
+    meta.textContent = plan.baseStations.join("・") + "発・片道約" + plan.oneWayMinutes + "分・" + plan.seasonBlock;
+    card.appendChild(meta);
+
+    var reasons = document.createElement("div");
+    reasons.className = "recommend-card__reasons";
+    item.reasons.forEach(function(r) {
+      var tag = document.createElement("span");
+      tag.className = "recommend-card__reason";
+      tag.textContent = r;
+      reasons.appendChild(tag);
+    });
+    card.appendChild(reasons);
+
+    return card;
+  }
+
   function renderCards() {
     const container = $(".js-cards");
     const countEl = $(".js-result-count");
@@ -313,6 +395,7 @@
     countEl.textContent = plans.length + "件のプランが見つかりました";
 
     container.innerHTML = "";
+    renderRecommend();
 
     if (plans.length === 0) {
       const empty = document.createElement("div");
@@ -404,6 +487,17 @@
     $(".js-calendar-btn").addEventListener("click", function() {
       $(".js-calendar-modal-overlay").classList.remove("calendar-modal-overlay--hidden");
     });
+
+    var recommendLink = $(".js-recommend-link");
+    if (recommendLink) {
+      recommendLink.addEventListener("click", function(e) {
+        e.preventDefault();
+        var section = $(".js-recommend-section");
+        if (section && section.style.display !== "none") {
+          section.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    }
 
     document.addEventListener("click", function(e) {
       if (e.target.closest(".js-calendar-close") || e.target.classList.contains("js-calendar-modal-overlay")) {

@@ -28,7 +28,15 @@
       <span class="alert-banner__icon">⚠️</span>
       <span class="js-alert-text"></span>
       <a href="#" class="alert-banner__link js-calendar-btn">📅 カレンダーに登録</a>
+      <a href="#recommend" class="alert-banner__link js-recommend-link">✨ おすすめを見る</a>
     </div>
+    <section class="recommend js-recommend-section" id="recommend">
+      <div class="recommend__head">
+        <h2 class="recommend__title">✨ あなたへのおすすめ</h2>
+        <p class="recommend__sub js-recommend-sub"></p>
+      </div>
+      <div class="recommend__cards js-recommend-cards"></div>
+    </section>
     <section class="filters">
       <div class="quick-filters js-quick-filters"></div>
       <div class="filter-group">
@@ -70,6 +78,7 @@
   </div>
 
   <script src="js/data.js"></script>
+  <script src="js/recommend.js"></script>
   <script src="js/map.js"></script>
   <script src="js/app.js"></script>
 </body>
