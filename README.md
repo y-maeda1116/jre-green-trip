@@ -121,10 +121,12 @@ CI 等で `node scripts/validate-plans.js` を実行し、エラーを検出で�
 本リポジトリは [security-base](https://github.com/y-maeda1116/security-base) 由来のファイルを継承しており、
 以下は旅プランサイト本体ではなくセキュリティCI設定として含まれています。
 
-- `.github/workflows/ci.yml`, `reusable-*-security.yml`, `reusable-secret-scan.yml`
+- `reusable-*-security.yml`, `reusable-secret-scan.yml`
 - `.github/dependabot.yml`
 - `configs/`（golangci-lint / ESLint 共通設定）
 - `tools/sync/`（他リポジトリへセキュリティ設定を同期する Go ツール）
-- `src/`, `tests/`, `pyproject.toml`（Python セキュリティテンプレート）
 
 サイト本体に変更を加える場合は `docs/` 配下のみで完結します。
+
+> Python セキュリティテンプレート（`src/` / `tests/` / `pyproject.toml` / Python CI）は
+> テンプレ残骸として削除済みです（issue #47）。
