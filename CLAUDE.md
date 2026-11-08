@@ -19,8 +19,13 @@ docs/                     # サイト本体（GitHub Pages で公開）
 └── js/
     ├── data.js           # PLANS（旅プラン）+ SEASON_BLOCKS ★編集対象
     ├── map.js            # ROUTE_LINES（路線・所要時間）・利用ルール本文
-    ├── app.js            # フィルタ・カード描画・期限アラート
-    └── recommend.js
+    ├── recommend.js      # プラン推薦ロジック（純粋関数）
+    └── app/              # フィルタ・カード描画・期限アラート（機能別に分割）
+        ├── state.js      # 共通状態 (state)・ユーティリティ ($, $$)
+        ├── filters.js    # フィルタUI描画・プラン絞り込み
+        ├── deadlines.js  # 期限アラート・カレンダーモーダル
+        ├── cards.js      # プランカード・おすすめ表示
+        └── main.js       # 初期化・イベント・ページ切替
 scripts/
 ├── validate-plans.js     # PLANS / SEASON_BLOCKS の検証スクリプト
 └── apply-security.sh     # security-base 由来（他リポジトリへ適用するスクリプト）
