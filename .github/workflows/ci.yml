@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  go-security:
+    name: Go Security Check
+    uses: ./.github/workflows/reusable-go-security.yml
+    with:
+      # Go モジュールは tools/sync 配下、Lint 設定は共通の configs/.golangci.yml
+      working-directory: tools/sync
+      golangci-config: configs/.golangci.yml
+
+  secret-scan:
+    name: Secret Scan
+    uses: ./.github/workflows/reusable-secret-scan.yml
